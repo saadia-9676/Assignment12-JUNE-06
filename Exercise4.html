@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Password Generator</title>
+  <style>
+    body {
+      background-color: #412121;
+      color: #fff;
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      background-color: #101010;
+      padding: 30px;
+      border-radius: 12px;
+      text-align: center;
+      box-shadow: 0 0 15px rgba(0,0,0,0.5);
+    }
+    input[type="text"] {
+      width: 80%;
+      padding: 10px;
+      margin: 15px 0;
+      border-radius: 5px;
+      border: none;
+      font-size: 16px;
+    }
+    button {
+      padding: 10px 20px;
+      margin-left: 5px;
+      border: none;
+      border-radius: 5px;
+      background-color: #1abc9c;
+      color: white;
+      cursor: pointer;
+    }
+    .options {
+      margin-top: 20px;
+    }
+    label {
+      margin-right: 10px;
+    }
+    input[type="range"] {
+      width: 100px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Password - Generator</h2>
+    <input type="text" id="password" readonly>
+    <button onclick="copyPassword()">Copy</button>
+    <div class="options">
+      <label>
+        <input type="checkbox" id="includeChars" checked> Characters
+      </label>
+      <label>
+        <input type="checkbox" id="includeNumbers" checked> Numbers
+      </label>
+      <br><br>
+      Length 
+      <input type="range" id="lengthRange" min="6" max="30" value="17" oninput="updatePassword()">
+      <span id="lengthValue">17</span>
+    </div>
+  </div>
+
+  <script>
+    const passwordField = document.getElementById("password");
+    const lengthRange = document.getElementById("lengthRange");
+    const lengthValue = document.getElementById("lengthValue");
+
+    function generatePassword() {
+      const length = parseInt(lengthRange.value);
+      const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz!@#$%^&*()_+[]{}<>?/|~";
+      const nums = "0123456789";
+
+      let allowed = "";
+      if (document.getElementById("includeChars").checked) allowed += chars;
+      if (document.getElementById("includeNumbers").checked) allowed += nums;
+
+      let password = "";
+      for (let i = 0; i < length; i++) {
+        password += allowed.charAt(Math.floor(Math.random() * allowed.length));
+      }
+      passwordField.value = password;
+    }
+
+    function updatePassword() {
+      lengthValue.textContent = lengthRange.value;
+      generatePassword();
+    }
+
+    function copyPassword() {
+      passwordField.select();
+      document.execCommand("copy");
+      alert("Password copied to clipboard!");
+    }
+
+    // Generate password on page load
+    window.onload = generatePassword;
+    lengthRange.addEventListener("input", updatePassword);
+  </script>
+</body>
+</html>
